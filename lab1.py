@@ -117,6 +117,8 @@ downsample(img1, 3).save("Images/lab1/downsampled_img1.bmp")
 resample_2pass(img1, 7, 3).save("Images/lab1/2pass_resampled_img1.bmp")
 resample_1pass(img1, 7, 3).save("Images/lab1/1pass_resampled_img1.bmp")
 halftone(img1).save("Images/lab1/halftone_img1.bmp")
+Otsu_binarization(halftone(img1)).save("Images/lab1/binarized_img1.bmp")
 
 img2 = Image.open("Images/lab1/img2.bmp")
 Otsu_binarization(halftone(img2)).save("Images/lab1/Otsu_binarized_img2.bmp")
+
