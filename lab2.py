@@ -1,5 +1,18 @@
 from PIL import Image
 import numpy as np
+import time
+from functools import wraps
+
+def print_timing(func):
+    @wraps(func)
+    def wrapper(*arg, **kwargs):
+        start = time.perf_counter()  # needs python3.3 or higher
+        result = func(*arg, **kwargs)
+        end = time.perf_counter()
+        fs = '{} took {:.3f} milliseconds'
+        print(fs.format(func.__name__, (end - start) * 1000))
+        return result
+    return wrapper
 
 
 def aperture_to_array(pixels, x, y):
@@ -65,10 +78,12 @@ def erase_edge_pixels(image):
     return image
 
 
+@print_timing
 def erase_fringe(image):
     for i in range(10):
         image = erase_edge_pixels(erase_isolated_pixels(image))
     return image
+
 
 def negate_image(image):
     pixels = image.load()
@@ -78,6 +93,7 @@ def negate_image(image):
     return image
 
 
+# img1
 img1 = Image.open("Images/lab2/img1.bmp").resize((640, 360))
 img1.save("Images/lab2/downsampled_img1.bmp")
 filtered_img1 = erase_fringe(img1)
@@ -88,9 +104,10 @@ negated_img1.save("Images/lab2/negated_img1.bmp")
 filtered_negated_img1 = erase_fringe(negated_img1)
 filtered_negated_img1.save("Images/lab2/filtered_negated_img1.bmp")
 
+
+# img2
 img2 = Image.open("Images/lab2/img2.bmp").resize((400, 600))
 img2.save("Images/lab2/downsampled_img2.bmp")
-filtered_img2 = img2
 filtered_img2 = erase_fringe(img2)
 filtered_img2.save("Images/lab2/filtered_img2.bmp")
 
@@ -98,3 +115,14 @@ negated_img2 = negate_image(img2)
 negated_img2.save("Images/lab2/negated_img2.bmp")
 filtered_negated_img2 = erase_fringe(negated_img2)
 filtered_negated_img2.save("Images/lab2/filtered_negated_img2.bmp")
+
+
+# img3
+img3 = Image.open("Images/lab2/img3.bmp")
+filtered_img3 = erase_fringe(img3)
+filtered_img3.save("Images/lab2/filtered_img3.bmp")
+
+negated_img3 = negate_image(img3)
+negated_img3.save("Images/lab2/negated_img3.bmp")
+filtered_negated_img3 = erase_fringe(negated_img3)
+filtered_negated_img3.save("Images/lab2/filtered_negated_img3.bmp")

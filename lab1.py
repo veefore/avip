@@ -1,9 +1,25 @@
 from PIL import Image
 import math
+import time
+from functools import wraps
+
+def print_timing(func):
+    @wraps(func)
+    def wrapper(*arg, **kwargs):
+        start = time.perf_counter()  # needs python3.3 or higher
+        result = func(*arg, **kwargs)
+        end = time.perf_counter()
+        fs = '{} took {:.3f} milliseconds'
+        print(fs.format(func.__name__, (end - start) * 1000))
+        return result
+    return wrapper
+
 
 def multiply_tuple(tup, coef):
     return tuple([math.floor(x * coef) for x in list(tup)])
 
+
+@print_timing
 def upsample(image, coef):
     # isinstance(coef, int) is asserted
     pixels = image.load()
@@ -16,6 +32,8 @@ def upsample(image, coef):
                     new_pixels[h * coef + shift_h, w * coef + shift_w] = pixels[h, w]
     return new_image
 
+
+@print_timing
 def downsample(image, coef):
     # isinstance(coef, int) is asserted
     pixels = image.load()
@@ -26,10 +44,14 @@ def downsample(image, coef):
             new_pixels[h, w] = pixels[h * coef, w * coef]
     return new_image
 
+
+@print_timing
 def resample_2pass(image, n, m):
     # image = image * (n / m)
     return downsample(upsample(image, n), m)
 
+
+@print_timing
 def resample_1pass(image, n, m):
     # image = image * (n / m)
     pixels = image.load()
@@ -41,6 +63,8 @@ def resample_1pass(image, n, m):
             new_pixels[h, w] = pixels[math.floor(h * m / n), math.floor(w * m / n)]
     return new_image
 
+
+@print_timing
 def halftone(image):
     pixels = image.load()
     new_image = Image.new('L', image.size)
@@ -50,6 +74,8 @@ def halftone(image):
             new_pixels[h, w] = (round((pixels[h, w][0] + pixels[h, w][1] + pixels[h, w][2]) / 3))
     return new_image
 
+
+@print_timing
 def Otsu_binarization(image):
     # image.mode == 'L' is asserted
     hist = [0] * 256
@@ -84,13 +110,13 @@ def Otsu_binarization(image):
         d1 = 0
         for p in hist:
             if p <= t:
-                d0 += p * (hist.index(p) - m0)**2
+                d0 += p * (hist.index(p) - m0) ** 2
             else:
-                d1 += p * (hist.index(p) - m1)**2
+                d1 += p * (hist.index(p) - m1) ** 2
 
         # maximize the relation of between-group variance to within-group variance
         d_wg = w0 * d0 + w1 * d1
-        d_bg = w0 * w1 * (m0 - m1)**2
+        d_bg = w0 * w1 * (m0 - m1) ** 2
         rel = d_bg / d_wg
         if max_rel == -1:
             max_rel = rel
@@ -111,6 +137,7 @@ def Otsu_binarization(image):
 
     return new_image
 
+
 img1 = Image.open("Images/lab1/img1.bmp")
 upsample(img1, 3).save("Images/lab1/upsampled_img1.bmp")
 downsample(img1, 3).save("Images/lab1/downsampled_img1.bmp")
@@ -121,4 +148,7 @@ Otsu_binarization(halftone(img1)).save("Images/lab1/binarized_img1.bmp")
 
 img2 = Image.open("Images/lab1/img2.bmp")
 Otsu_binarization(halftone(img2)).save("Images/lab1/Otsu_binarized_img2.bmp")
-
+img3 = Image.open("Images/lab1/img3.bmp")
+Otsu_binarization(halftone(img3)).save("Images/lab1/Otsu_binarized_img3.bmp")
+img4 = Image.open("Images/lab1/img4.bmp")
+Otsu_binarization(halftone(img4)).save("Images/lab1/Otsu_binarized_img4.bmp")
