@@ -88,10 +88,10 @@ def outline(image, threshold):
 
 
 def process_image(image_name, threshold):
-    img = Image.open("Images/lab3/" + image_name)
+    img = Image.open("Data/lab3/" + image_name)
     halftone_img = halftone(img)
-    halftone_img.save("Images/lab3/halftone_" + image_name)
-    outline(halftone_img, threshold).save("Images/lab3/outlined_" + image_name)
+    halftone_img.save("Data/lab3/halftone_" + image_name)
+    outline(halftone_img, threshold).save("Data/lab3/outlined_" + image_name)
 
 
 def run_test():

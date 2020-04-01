@@ -95,39 +95,39 @@ def negate_image(image):
 
 def run_test():
     # img1
-    img1 = Image.open("Images/lab2/img1.bmp").resize((640, 360))
-    img1.save("Images/lab2/downsampled_img1.bmp")
+    img1 = Image.open("Data/lab2/img1.bmp").resize((640, 360))
+    img1.save("Data/lab2/downsampled_img1.bmp")
     filtered_img1 = erase_fringe(img1)
-    filtered_img1.save("Images/lab2/filtered_img1.bmp")
+    filtered_img1.save("Data/lab2/filtered_img1.bmp")
 
     negated_img1 = negate_image(img1)
-    negated_img1.save("Images/lab2/negated_img1.bmp")
+    negated_img1.save("Data/lab2/negated_img1.bmp")
     filtered_negated_img1 = erase_fringe(negated_img1)
-    filtered_negated_img1.save("Images/lab2/filtered_negated_img1.bmp")
+    filtered_negated_img1.save("Data/lab2/filtered_negated_img1.bmp")
 
 
     # img2
-    img2 = Image.open("Images/lab2/img2.bmp").resize((400, 600))
-    img2.save("Images/lab2/downsampled_img2.bmp")
+    img2 = Image.open("Data/lab2/img2.bmp").resize((400, 600))
+    img2.save("Data/lab2/downsampled_img2.bmp")
     filtered_img2 = erase_fringe(img2)
-    filtered_img2.save("Images/lab2/filtered_img2.bmp")
+    filtered_img2.save("Data/lab2/filtered_img2.bmp")
 
     negated_img2 = negate_image(img2)
-    negated_img2.save("Images/lab2/negated_img2.bmp")
+    negated_img2.save("Data/lab2/negated_img2.bmp")
     filtered_negated_img2 = erase_fringe(negated_img2)
-    filtered_negated_img2.save("Images/lab2/filtered_negated_img2.bmp")
+    filtered_negated_img2.save("Data/lab2/filtered_negated_img2.bmp")
 
 
     # img3
-    img3 = Image.open("Images/lab2/img3.bmp").resize((300, 300))
-    img3.save("Images/lab2/downsampled_img3.bmp")
+    img3 = Image.open("Data/lab2/img3.bmp").resize((300, 300))
+    img3.save("Data/lab2/downsampled_img3.bmp")
     filtered_img3 = erase_fringe(img3)
-    filtered_img3.save("Images/lab2/filtered_img3.bmp")
+    filtered_img3.save("Data/lab2/filtered_img3.bmp")
 
     negated_img3 = negate_image(img3)
-    negated_img3.save("Images/lab2/negated_img3.bmp")
+    negated_img3.save("Data/lab2/negated_img3.bmp")
     filtered_negated_img3 = erase_fringe(negated_img3)
-    filtered_negated_img3.save("Images/lab2/filtered_negated_img3.bmp")
+    filtered_negated_img3.save("Data/lab2/filtered_negated_img3.bmp")
 
 
 run_test()
