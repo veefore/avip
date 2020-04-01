@@ -18,13 +18,62 @@ def print_timing(func):
     return wrapper
 
 
+def find_top_left(image, val):
+    # returns coordinates of the top left corner of a rectangle that contains all pixels that == val
+    top = image.size[1]
+    left = image.size[0]
+    pixels = image.load()
+    for w in range(image.size[0]):
+        for h in range(image.size[1]):
+            if pixels[w, h] == val:
+                top = min(top, h)
+                left = min(left, w)
+    return top, left
+
+
+def find_bot_right(image, val):
+    # returns coordinates of the bottom right corner of a rectangle that contains all pixels that == val
+    bot = 0
+    right = 0
+    pixels = image.load()
+    for w in range(image.size[0]):
+        for h in range(image.size[1]):
+            if pixels[w, h] == val:
+                bot = max(bot, h)
+                right = max(right, w)
+    return bot, right
+
+
+def crop_to_minimum(image):
+    # assumes image.mode == '1'
+
+    # (0, 0)     top    (w - 1, 0)
+    #
+    # left               right
+    #
+    # (0, h - 1) bot (w - 1, h - 1)
+
+    top, left = find_top_left(image, 0)
+    bot, right = find_bot_right(image, 0)
+    width = right - left + 1
+    height = bot - top + 1
+    new_image = Image.new(image.mode, (width, height))
+    new_pixels = new_image.load()
+    pixels = image.load()
+    for w in range(width):
+        for h in range(height):
+            print(w, h)
+            new_pixels[w, h] = pixels[left + w, top + h]
+    return new_image
+
+
 def text_to_image(text, font_path, font_size):
     font = ImageFont.truetype(font_path, font_size)
     text_width, text_height = ImageDraw.Draw(Image.new('1', (1, 1))).textsize(text, font)
     image = Image.new('1', (text_width, text_height), 1)
     drawing = ImageDraw.Draw(image)
     drawing.text((0, 0), text, fill=0, font=font)
-    return image
+    return crop_to_minimum(image)
 
 
 @print_timing
