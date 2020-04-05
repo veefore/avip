@@ -29,7 +29,8 @@ def aperture_to_array(pixels, x, y):
 
 def erase_isolated_pixels(image):
     # image.mode == '1' is asserted
-    pixels = image.load()
+    new_image = image.copy()
+    pixels = new_image.load()
     B1 = np.array([[0, 0, 0], [0, 1, 0], [0, 0, 0]])
     B2 = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
 
@@ -40,7 +41,7 @@ def erase_isolated_pixels(image):
                 pixels[h + 1, w + 1] = (0)
             elif np.array_equal(B2, arr):
                 pixels[h + 1, w + 1] = (1)
-    return image
+    return new_image
 
 
 def erase_edge_pixels(image):
@@ -59,7 +60,8 @@ def erase_edge_pixels(image):
     B2 = 1 - B1
 
 
-    pixels = image.load()
+    new_image = image.copy()
+    pixels = new_image.load()
     for h in range((image.size[0] - 2)):
         for w in range((image.size[1] - 2)):
             ape_arr = aperture_to_array(pixels, h, w)
@@ -75,21 +77,24 @@ def erase_edge_pixels(image):
                         pixels[h + 1, w + 1] = (1)
                         break;
 
-    return image
+    return new_image
 
 
 @print_timing
 def erase_fringe(image):
-    for i in range(10):
-        image = erase_edge_pixels(erase_isolated_pixels(image))
-    return image
+    new_image = erase_edge_pixels(erase_isolated_pixels(image))
+    return new_image
 
 
-def negate_image(image):
+def difference_image(image1, image2):
+    # assumes image1.size == image2.size
+    pixels1 = image1.load()
+    pixels2 = image2.load()
+    image = Image.new('1', image1.size)
     pixels = image.load()
-    for h in range(image.size[0]):
-        for w in range(image.size[1]):
-            pixels[h, w] = 1 - pixels[h, w]
+    for h in range(image1.size[0]):
+        for w in range(image1.size[1]):
+            pixels[h, w] = abs(pixels1[h, w] - pixels2[h, w])
     return image
 
 
@@ -99,11 +104,7 @@ def run_test():
     img1.save("Data/lab2/downsampled_img1.bmp")
     filtered_img1 = erase_fringe(img1)
     filtered_img1.save("Data/lab2/filtered_img1.bmp")
-
-    negated_img1 = negate_image(img1)
-    negated_img1.save("Data/lab2/negated_img1.bmp")
-    filtered_negated_img1 = erase_fringe(negated_img1)
-    filtered_negated_img1.save("Data/lab2/filtered_negated_img1.bmp")
+    difference_image(img1, filtered_img1).save("Data/lab2/diff_img1.bmp")
 
 
     # img2
@@ -111,11 +112,7 @@ def run_test():
     img2.save("Data/lab2/downsampled_img2.bmp")
     filtered_img2 = erase_fringe(img2)
     filtered_img2.save("Data/lab2/filtered_img2.bmp")
-
-    negated_img2 = negate_image(img2)
-    negated_img2.save("Data/lab2/negated_img2.bmp")
-    filtered_negated_img2 = erase_fringe(negated_img2)
-    filtered_negated_img2.save("Data/lab2/filtered_negated_img2.bmp")
+    difference_image(img2, filtered_img2).save("Data/lab2/diff_img2.bmp")
 
 
     # img3
@@ -123,11 +120,7 @@ def run_test():
     img3.save("Data/lab2/downsampled_img3.bmp")
     filtered_img3 = erase_fringe(img3)
     filtered_img3.save("Data/lab2/filtered_img3.bmp")
-
-    negated_img3 = negate_image(img3)
-    negated_img3.save("Data/lab2/negated_img3.bmp")
-    filtered_negated_img3 = erase_fringe(negated_img3)
-    filtered_negated_img3.save("Data/lab2/filtered_negated_img3.bmp")
+    difference_image(img3, filtered_img3).save("Data/lab2/diff_img3.bmp")
 
 
 run_test()

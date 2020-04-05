@@ -157,7 +157,7 @@ def get_profiles(image):
 
 
 @print_timing
-def calculate_features(image, csv_file_path, profile_path_without_extension):
+def calculate_features(image, csv_file_path, name, profile_path_without_extension):
     weight = get_weight(image)
     density = weight / (image.size[0] * image.size[1])
     centre_of_mass = get_centre_of_mass(image)
@@ -177,9 +177,9 @@ def calculate_features(image, csv_file_path, profile_path_without_extension):
     #print('Relative horizontal inertia moment ', relative_horizontal_inertia_moment)
     #print('Relative vertical inertia moment ', relative_vertical_inertia_moment)
 
-    csv_file = open(csv_file_path, 'w')
+    csv_file = open(csv_file_path, 'a')
     csv_writer = csv.writer(csv_file, delimiter=';')
-    csv_writer.writerow([weight, density, centre_of_mass, relative_centre_of_mass, horizontal_inertia_moment,\
+    csv_writer.writerow([name, weight, density, centre_of_mass, relative_centre_of_mass, horizontal_inertia_moment,\
                          vertical_inertia_moment, relative_horizontal_inertia_moment, relative_vertical_inertia_moment])
 
     plt.hist(x=[val for val in range(vertical_profile.size)],
@@ -200,6 +200,6 @@ def run():
     generate_symbol_images(alphabet, "/usr/share/fonts/truetype/ubuntu/UbuntuMono-RI.ttf", 80)
     for symbol in alphabet:
         image = Image.open('Data/lab4/alphabet/' + symbol + '.png')
-        calculate_features(image, 'Data/lab4/features/' + symbol + '.txt', 'Data/lab4/features/' + symbol)
+        calculate_features(image, 'Data/lab4/features/features.csv', symbol, 'Data/lab4/features/' + symbol)
 
 run()
