@@ -123,4 +123,4 @@ def run_test():
     difference_image(img3, filtered_img3).save("Data/lab2/diff_img3.bmp")
 
 
-run_test()
+#run_test()

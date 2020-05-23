@@ -134,4 +134,4 @@ def run_test():
     process_image("img4.bmp", 65)
 
 
-run_test()
+#run_test()

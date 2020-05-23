@@ -154,4 +154,4 @@ def run_test():
     img4 = Image.open("Data/lab1/img4.bmp")
     Otsu_binarization(halftone(img4)).save("Data/lab1/Otsu_binarized_img4.bmp")
 
-run_test()
+#run_test()

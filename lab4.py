@@ -62,7 +62,6 @@ def crop_to_minimum(image):
     pixels = image.load()
     for w in range(width):
         for h in range(height):
-            print(w, h)
             new_pixels[w, h] = pixels[left + w, top + h]
     return new_image
 
@@ -202,4 +201,4 @@ def run():
         image = Image.open('Data/lab4/alphabet/' + symbol + '.png')
         calculate_features(image, 'Data/lab4/features/features.csv', symbol, 'Data/lab4/features/' + symbol)
 
-run()
+#run()
