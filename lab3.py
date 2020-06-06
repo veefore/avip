@@ -1,19 +1,6 @@
 from PIL import Image
 import numpy as np
-import time
-from functools import wraps
-
-
-def print_timing(func):
-    @wraps(func)
-    def wrapper(*arg, **kwargs):
-        start = time.perf_counter()
-        result = func(*arg, **kwargs)
-        end = time.perf_counter()
-        fs = '{} took {:.3f} milliseconds'
-        print(fs.format(func.__name__, (end - start) * 1000))
-        return result
-    return wrapper
+from utils import print_timing
 
 
 def halftone(image):
@@ -32,7 +19,6 @@ def aperture_to_array(pixels, x, y, a):
     arr = np.zeros((a, a))
     for shift_x in range(a):
         for shift_y in range(a):
-            #print(x, shift_x, y, shift_y)
             arr[shift_x][shift_y] = int(pixels[x + shift_x, y + shift_y])
     return arr
 
@@ -53,7 +39,6 @@ def calculate_gradients(image):
     G = np.empty((size0, size1), dtype=int)
 
     pixels = image.load()
-    max_g = 0
     for h in range(size0):
         for w in range(size1):
             arr = aperture_to_array(pixels, h, w, 5)
@@ -108,30 +93,31 @@ def grads_to_images(grads):
     return images
 
 
-
 @print_timing
-def outline(image, image_name, threshold):
+def outline(image, image_name, threshold, folder_path=None):
     grads = calculate_gradients(image)
     grad_images = grads_to_images(grads)
-    grad_images[0].save("Data/lab3/Gx_" + image_name)
-    grad_images[1].save("Data/lab3/Gy_" + image_name)
-    grad_images[2].save("Data/lab3/G_" + image_name)
-
+    if folder_path is not None:
+        grad_images[0].save(folder_path + "Gx_" + image_name)
+        grad_images[1].save(folder_path + "Gy_" + image_name)
+        grad_images[2].save(folder_path + "G_" + image_name)
     return binarize(grads[2], image.size, threshold)
 
 
-def process_image(image_name, threshold):
-    img = Image.open("Data/lab3/" + image_name)
+def process_image(image_name, threshold, folder_path=None, save=False):
+    img = Image.open(folder_path + image_name)
     halftone_img = halftone(img)
-    halftone_img.save("Data/lab3/halftone_" + image_name)
-    outline(halftone_img, image_name, threshold).save("Data/lab3/outlined_" + image_name)
+    if save:
+        halftone_img.save(folder_path + "halftone_" + image_name)
+    outline(halftone_img, image_name, threshold, folder_path).save(folder_path + "outlined_" + image_name)
 
 
 def run_test():
-    process_image("img1.bmp", 63)
-    process_image("img2.bmp", 115)
-    process_image("img3.bmp", 75)
-    process_image("img4.bmp", 65)
+    folder_path = "Data/lab3/"
+    process_image("img1.bmp", 63, folder_path)
+    process_image("img2.bmp", 115, folder_path)
+    process_image("img3.bmp", 75, folder_path)
+    process_image("img4.bmp", 65, folder_path)
 
 
 #run_test()

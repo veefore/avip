@@ -1,18 +1,6 @@
 from PIL import Image
 import numpy as np
-import time
-from functools import wraps
-
-def print_timing(func):
-    @wraps(func)
-    def wrapper(*arg, **kwargs):
-        start = time.perf_counter()  # needs python3.3 or higher
-        result = func(*arg, **kwargs)
-        end = time.perf_counter()
-        fs = '{} took {:.3f} milliseconds'
-        print(fs.format(func.__name__, (end - start) * 1000))
-        return result
-    return wrapper
+from utils import print_timing
 
 
 def aperture_to_array(pixels, x, y):
@@ -22,13 +10,12 @@ def aperture_to_array(pixels, x, y):
            [0, 0, 0]]
     for shift_x in range(3):
         for shift_y in range(3):
-            #print(x, shift_x, y, shift_y)
             arr[shift_x][shift_y] = int(pixels[x + shift_x, y + shift_y] / 255)
     return arr
 
 
 def erase_isolated_pixels(image):
-    # image.mode == '1' is asserted
+    assert image.mode == '1'
     new_image = image.copy()
     pixels = new_image.load()
     B1 = np.array([[0, 0, 0], [0, 1, 0], [0, 0, 0]])
@@ -45,7 +32,7 @@ def erase_isolated_pixels(image):
 
 
 def erase_edge_pixels(image):
-    # image.mode == '1' is asserted
+    assert image.mode == '1'
     A = np.array([[[0, 0, 0], [0, 1, 0], [1, 0, 0]],
                   [[0, 0, 0], [0, 1, 0], [0, 1, 0]],
                   [[0, 0, 0], [0, 1, 0], [1, 1, 0]],
@@ -87,7 +74,7 @@ def erase_fringe(image):
 
 
 def difference_image(image1, image2):
-    # assumes image1.size == image2.size
+    assert image1.size == image2.size
     pixels1 = image1.load()
     pixels2 = image2.load()
     image = Image.new('1', image1.size)
@@ -99,28 +86,28 @@ def difference_image(image1, image2):
 
 
 def run_test():
-    # img1
-    img1 = Image.open("Data/lab2/img1.bmp").resize((640, 360))
-    img1.save("Data/lab2/downsampled_img1.bmp")
-    filtered_img1 = erase_fringe(img1)
-    filtered_img1.save("Data/lab2/filtered_img1.bmp")
-    difference_image(img1, filtered_img1).save("Data/lab2/diff_img1.bmp")
+    folder_path = "Data/lab2/"
 
+    # img1
+    img1 = Image.open(folder_path + "img1.bmp").resize((640, 360))
+    img1.save(folder_path + "downsampled_img1.bmp")
+    filtered_img1 = erase_fringe(img1)
+    filtered_img1.save(folder_path + "filtered_img1.bmp")
+    difference_image(img1, filtered_img1).save(folder_path + "diff_img1.bmp")
 
     # img2
-    img2 = Image.open("Data/lab2/img2.bmp").resize((400, 600))
-    img2.save("Data/lab2/downsampled_img2.bmp")
+    img2 = Image.open(folder_path + "img2.bmp").resize((400, 600))
+    img2.save(folder_path + "downsampled_img2.bmp")
     filtered_img2 = erase_fringe(img2)
-    filtered_img2.save("Data/lab2/filtered_img2.bmp")
-    difference_image(img2, filtered_img2).save("Data/lab2/diff_img2.bmp")
-
+    filtered_img2.save(folder_path + "filtered_img2.bmp")
+    difference_image(img2, filtered_img2).save(folder_path + "diff_img2.bmp")
 
     # img3
-    img3 = Image.open("Data/lab2/img3.bmp").resize((300, 300))
-    img3.save("Data/lab2/downsampled_img3.bmp")
+    img3 = Image.open(folder_path + "img3.bmp").resize((300, 300))
+    img3.save(folder_path + "downsampled_img3.bmp")
     filtered_img3 = erase_fringe(img3)
-    filtered_img3.save("Data/lab2/filtered_img3.bmp")
-    difference_image(img3, filtered_img3).save("Data/lab2/diff_img3.bmp")
+    filtered_img3.save(folder_path + "filtered_img3.bmp")
+    difference_image(img3, filtered_img3).save(folder_path + "diff_img3.bmp")
 
 
 #run_test()

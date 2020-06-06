@@ -1,18 +1,6 @@
 from PIL import Image
 import math
-import time
-from functools import wraps
-
-def print_timing(func):
-    @wraps(func)
-    def wrapper(*arg, **kwargs):
-        start = time.perf_counter()  # needs python3.3 or higher
-        result = func(*arg, **kwargs)
-        end = time.perf_counter()
-        fs = '{} took {:.3f} milliseconds'
-        print(fs.format(func.__name__, (end - start) * 1000))
-        return result
-    return wrapper
+from utils import print_timing
 
 
 def multiply_tuple(tup, coef):
@@ -139,19 +127,20 @@ def Otsu_binarization(image):
 
 
 def run_test():
-    img1 = Image.open("Data/lab1/img1.bmp")
-    upsample(img1, 3).save("Data/lab1/upsampled_img1.bmp")
-    downsample(img1, 3).save("Data/lab1/downsampled_img1.bmp")
-    resample_2pass(img1, 7, 3).save("Data/lab1/2pass_resampled_img1.bmp")
-    resample_1pass(img1, 7, 3).save("Data/lab1/1pass_resampled_img1.bmp")
-    halftone(img1).save("Data/lab1/halftone_img1.bmp")
-    Otsu_binarization(halftone(img1)).save("Data/lab1/binarized_img1.bmp")
+    folder_path = "Data/lab1/"
+    img1 = Image.open(folder_path + "img1.bmp")
+    upsample(img1, 3).save(folder_path + "upsampled_img1.bmp")
+    downsample(img1, 3).save(folder_path + "downsampled_img1.bmp")
+    resample_2pass(img1, 7, 3).save(folder_path + "2pass_resampled_img1.bmp")
+    resample_1pass(img1, 7, 3).save(folder_path + "1pass_resampled_img1.bmp")
+    halftone(img1).save(folder_path + "halftone_img1.bmp")
+    Otsu_binarization(halftone(img1)).save(folder_path + "binarized_img1.bmp")
 
-    img2 = Image.open("Data/lab1/img2.bmp")
-    Otsu_binarization(halftone(img2)).save("Data/lab1/Otsu_binarized_img2.bmp")
-    img3 = Image.open("Data/lab1/img3.bmp")
-    Otsu_binarization(halftone(img3)).save("Data/lab1/Otsu_binarized_img3.bmp")
-    img4 = Image.open("Data/lab1/img4.bmp")
-    Otsu_binarization(halftone(img4)).save("Data/lab1/Otsu_binarized_img4.bmp")
+    img2 = Image.open(folder_path + "img2.bmp")
+    Otsu_binarization(halftone(img2)).save(folder_path + "Otsu_binarized_img2.bmp")
+    img3 = Image.open(folder_path+ "img3.bmp")
+    Otsu_binarization(halftone(img3)).save(folder_path + "Otsu_binarized_img3.bmp")
+    img4 = Image.open(folder_path + "img4.bmp")
+    Otsu_binarization(halftone(img4)).save(folder_path + "Otsu_binarized_img4.bmp")
 
 #run_test()
