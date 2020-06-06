@@ -52,8 +52,7 @@ def resample_1pass(image, n, m):
     return new_image
 
 
-@print_timing
-def halftone(image):
+def greyscale(image):
     pixels = image.load()
     new_image = Image.new('L', image.size)
     new_pixels = new_image.load()
@@ -133,14 +132,14 @@ def run_test():
     downsample(img1, 3).save(folder_path + "downsampled_img1.bmp")
     resample_2pass(img1, 7, 3).save(folder_path + "2pass_resampled_img1.bmp")
     resample_1pass(img1, 7, 3).save(folder_path + "1pass_resampled_img1.bmp")
-    halftone(img1).save(folder_path + "halftone_img1.bmp")
-    Otsu_binarization(halftone(img1)).save(folder_path + "binarized_img1.bmp")
+    greyscale(img1).save(folder_path + "greyscale_img1.bmp")
+    Otsu_binarization(greyscale(img1)).save(folder_path + "binarized_img1.bmp")
 
     img2 = Image.open(folder_path + "img2.bmp")
-    Otsu_binarization(halftone(img2)).save(folder_path + "Otsu_binarized_img2.bmp")
+    Otsu_binarization(greyscale(img2)).save(folder_path + "Otsu_binarized_img2.bmp")
     img3 = Image.open(folder_path+ "img3.bmp")
-    Otsu_binarization(halftone(img3)).save(folder_path + "Otsu_binarized_img3.bmp")
+    Otsu_binarization(greyscale(img3)).save(folder_path + "Otsu_binarized_img3.bmp")
     img4 = Image.open(folder_path + "img4.bmp")
-    Otsu_binarization(halftone(img4)).save(folder_path + "Otsu_binarized_img4.bmp")
+    Otsu_binarization(greyscale(img4)).save(folder_path + "Otsu_binarized_img4.bmp")
 
 #run_test()

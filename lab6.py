@@ -1,10 +1,8 @@
-from PIL import Image, ImageDraw, ImageFont
-import numpy as np
+from PIL import Image
 from utils import print_timing
 from lab4 import generate_alphabet_features, calculate_features
 from lab5 import segment_line
 from math import sqrt
-from time import sleep
 
 
 @print_timing
@@ -48,7 +46,7 @@ def save_list(list, filepath):
 
 
 @print_timing
-def text_to_proximity_list(text_filepath)
+def text_to_proximity_list(text_filepath):
     canonical_features_dict = generate_alphabet_features(calculate_profiles=False, save=False)
     image = Image.open(text_filepath)
     symbol_coords = segment_line(image)

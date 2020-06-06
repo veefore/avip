@@ -121,6 +121,7 @@ def get_diagonal_inertia_moments(image, centre_of_mass=None):
     return get_inertia_moment_helper(image, 1, -1, centre_of_mass) / 2,\
            get_inertia_moment_helper(image, 1, 1, centre_of_mass) / 2
 
+
 def get_main_inertia_moments(image, horizontal_moment, vertical_moment):
     mixed_moment = get_mixed_inertia_moment(image)
     addendum1 = (horizontal_moment + vertical_moment) / 2

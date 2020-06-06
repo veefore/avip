@@ -1,16 +1,7 @@
 from PIL import Image
 import numpy as np
 from utils import print_timing
-
-
-def halftone(image):
-    pixels = image.load()
-    new_image = Image.new('L', image.size)
-    new_pixels = new_image.load()
-    for h in range(image.size[0]):
-        for w in range(image.size[1]):
-            new_pixels[h, w] = (round((pixels[h, w][0] + pixels[h, w][1] + pixels[h, w][2]) / 3))
-    return new_image
+from lab1 import greyscale
 
 
 def aperture_to_array(pixels, x, y, a):
@@ -106,10 +97,10 @@ def outline(image, image_name, threshold, folder_path=None):
 
 def process_image(image_name, threshold, folder_path=None, save=False):
     img = Image.open(folder_path + image_name)
-    halftone_img = halftone(img)
+    greyscale_img = greyscale(img)
     if save:
-        halftone_img.save(folder_path + "halftone_" + image_name)
-    outline(halftone_img, image_name, threshold, folder_path).save(folder_path + "outlined_" + image_name)
+        greyscale_img.save(folder_path + "greyscale_" + image_name)
+    outline(greyscale_img, image_name, threshold, folder_path).save(folder_path + "outlined_" + image_name)
 
 
 def run_test():
